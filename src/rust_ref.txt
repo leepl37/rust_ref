@@ -1,0 +1,66 @@
+파일 읽기 
+let mut file = std::fs::File::create("hello.txt").unwrap();
+    let text = "hello world \n my name is tony";
+    file.write_all(text.as_bytes());
+
+unwrap_or - value가 있으면 unwrap, 아니면(or) unwarp_or(String::new()) 이런 식..
+
+
+=Working Effectively with cargo fmt and cargo clippy=
+
+cargo fmt - 흩틀어진 포맷을 맞춰줌. 
+cargo clippy - check if there are clippy syntax
+1. git pre-commit
+vim .git/hooks/pre-commit 
+cargo fmt
+exec cargo clippy -- -D warnings // clippy code will be changed to error
+저장 후 나오기 alt+enter, i 변환 ->  wq!
+권한 부여하기 chmod a+x  .git/hooks/pre-commit
+
+
+=Error handling 
+-> Result <()>
+? 처리
+
+= Handling Command Line Arguments with Clap
+Command Line Arguments Parser 
+if let Err(e) = io::stdout().write_all(&buffer) {
+            return Err(e);
+        }
+-> io::stdout().write_all(&buffer)?
+
+if let Err(e) = io::stdout().write_all(&buffer){
+            if e.kind() == ErrorKind::BrokenPipe {
+                break;
+            }
+            return Err(e)
+	//std::process::exit(1);
+        }
+
+let matchs = App::new("pipeviewer")
+        .arg(Arg::with_name("infile").help("Read from a file instead of stdin"))
+        .arg(Arg::with_name("outfile")
+                 .short("o")
+                 .long("outfile")
+                 .takes_value(true)
+                 .help("Write output to a file instead of stdout"),
+        )
+        .arg(Arg::with_name("silent")
+            .short("s")
+            .long("silent"))
+        .get_matches();
+    let infile = matchs.value_of("infile").unwrap_or_default();
+    let outfile = matchs.value_of("outfile").unwrap_or_default();
+    let check_value_are_typed = if matchs.is_present("silent"){
+        true
+    }else{
+        !env::var("value").unwrap_or_default().is_empty()
+    };
+    dbg!(infile, outfile, check_value_are_typed);
+
+
+
+
+
+
+
